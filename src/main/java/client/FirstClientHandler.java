@@ -1,4 +1,4 @@
-package netty_demo;
+package client;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
@@ -13,10 +13,15 @@ public class FirstClientHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
 
-        System.out.println(new Date()+":客户端写出数据");
-        ByteBuf  buffer = getByteBuf(ctx);
+//        System.out.println(new Date()+":客户端写出数据");
+//        ByteBuf  buffer = getByteBuf(ctx);
+//
+//        ctx.channel().writeAndFlush(buffer);
 
-        ctx.channel().writeAndFlush(buffer);
+        for (int i = 0; i < 1000; i++) {
+            ByteBuf buffer = getByteBuf(ctx);
+            ctx.channel().writeAndFlush(buffer);
+        }
     }
 
     private ByteBuf getByteBuf(ChannelHandlerContext ctx) {

@@ -2,26 +2,41 @@ package protocol;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
+import protocol.request.CreateGroupRequestPacket;
+import protocol.request.LoginRequestPacket;
+import protocol.request.LogoutRequestPacket;
+import protocol.request.MessageRequestPacket;
+import protocol.response.CreateGroupResponsePacket;
+import protocol.response.LoginResponsePacket;
+import protocol.response.LogoutResponsePacket;
+import protocol.response.MessageResponsePacket;
 import protocol.serialize.JSONSerializer;
 import protocol.serialize.Serializer;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static protocol.Command.LOGIN_REQUEST;
+import static protocol.Command.*;
 
 public class PacketCodeC {
 
     public static final PacketCodeC INSTANCE = new PacketCodeC();
 
-    private static final int MAGIC_NUMBER = 0x12345678;
+    public static final int MAGIC_NUMBER = 0x12345678;
+
     private static final Map<Byte, Class<? extends Packet>> packetTypeMap;
     private static final Map<Byte, Serializer> serializerMap;
 
     static {
         packetTypeMap = new HashMap<>();
         packetTypeMap.put(LOGIN_REQUEST, LoginRequestPacket.class);
-
+        packetTypeMap.put(LOGIN_RESPONSE, LoginResponsePacket.class);
+        packetTypeMap.put(MESSAGE_REQUEST, MessageRequestPacket.class);
+        packetTypeMap.put(MESSAGE_RESPONSE, MessageResponsePacket.class);
+        packetTypeMap.put(LOGOUT_REQUEST, LogoutRequestPacket.class);
+        packetTypeMap.put(LOGOUT_RESPONSE, LogoutResponsePacket.class);
+        packetTypeMap.put(CREATE_GROUP_REQUEST, CreateGroupRequestPacket.class);
+        packetTypeMap.put(CREATE_GROUP_RESPONSE, CreateGroupResponsePacket.class);
         serializerMap = new HashMap<>();
         Serializer serializer = new JSONSerializer();
         serializerMap.put(serializer.getSerializerAlgorithm(), serializer);
@@ -42,6 +57,20 @@ public class PacketCodeC {
         byteBuf.writeBytes(bytes);
 
         return byteBuf;
+    }
+
+    //更改后定义
+    public void encode(ByteBuf byteBuf, Packet packet) {
+        // 1. 序列化 java 对象
+        byte[] bytes = Serializer.DEFAULT.serialize(packet);
+
+        // 2. 实际编码过程
+        byteBuf.writeInt(MAGIC_NUMBER);
+        byteBuf.writeByte(packet.getVersion());
+        byteBuf.writeByte(Serializer.DEFAULT.getSerializerAlgorithm());
+        byteBuf.writeByte(packet.getCommand());
+        byteBuf.writeInt(bytes.length);
+        byteBuf.writeBytes(bytes);
     }
 
     public Packet decode(ByteBuf byteBuf) {
@@ -69,7 +98,7 @@ public class PacketCodeC {
         if (requestType != null && serializer != null) {
             return serializer.deSerialize(requestType, bytes);
         }
-
+        System.out.println("requestType == "+requestType+"or seriallizer == "+ serializer);
         return null;
     }
 

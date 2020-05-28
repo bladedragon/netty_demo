@@ -1,17 +1,26 @@
 package netty_demo;
 
+import codec.PacketDecoder;
+import codec.PacketEncoder;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
-import io.netty.channel.SimpleChannelInboundHandler;
-import io.netty.channel.nio.NioEventLoop;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.string.StringDecoder;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
+import server.FirstServerHandler;
+import server.ServerHandler;
+import server.handler.LifeCyCleTestHandler;
+import server.handler.MessageRequestHandler;
+import server.handler.inbound.InBoundHandlerA;
+import server.handler.inbound.InBoundHandlerB;
+import server.handler.inbound.InBoundHandlerC;
+import server.handler.inbound.LoginRequestHandler;
+import server.handler.outbuound.OutBoundHandlerA;
+import server.handler.outbuound.OutBoundHandlerB;
+import server.handler.outbuound.OutBoundHandlerC;
 
 public class NettyServer {
     private final static int PORT = 8000;
@@ -30,7 +39,24 @@ public class NettyServer {
                 .childHandler(new ChannelInitializer<NioSocketChannel>() {
                     @Override
                     protected void initChannel(NioSocketChannel ch) throws Exception {
-                        ch.pipeline().addLast(new FirstServerHandler());
+//
+//                        ch.pipeline().addLast(new InBoundHandlerA());
+//                        ch.pipeline().addLast(new InBoundHandlerB());
+//                        ch.pipeline().addLast(new InBoundHandlerC());
+//
+//                        ch.pipeline().addLast(new ServerHandler());
+//
+//                        ch.pipeline().addLast(new OutBoundHandlerA());
+//                        ch.pipeline().addLast(new OutBoundHandlerB());
+//                        ch.pipeline().addLast(new OutBoundHandlerC());
+//                        ch.pipeline().addLast(new FirstServerHandler());
+
+                        ch.pipeline().addLast(new LifeCyCleTestHandler());
+                        ch.pipeline().addLast(new PacketDecoder());
+                        ch.pipeline().addLast(new LoginRequestHandler());
+                        ch.pipeline().addLast(new MessageRequestHandler());
+                        ch.pipeline().addLast(new PacketEncoder());
+
                     }
                 });
         bind(serverBootstrap,PORT);
