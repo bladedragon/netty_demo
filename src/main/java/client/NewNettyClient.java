@@ -2,10 +2,7 @@ package client;
 
 import client.console.ConsoleCommandManager;
 import client.console.LoginConsoleCommand;
-import client.handler.CreateGroupResponseHandler;
-import client.handler.LoginResponseHandler;
-import client.handler.LogoutResponseHandler;
-import client.handler.MessageResponseHandler;
+import client.handler.*;
 import codec.PacketDecoder;
 import codec.PacketEncoder;
 import io.netty.bootstrap.Bootstrap;
@@ -46,10 +43,14 @@ public class NewNettyClient {
                         ch.pipeline().addLast(new Spliter());
                         ch.pipeline().addLast(new PacketDecoder());
                         ch.pipeline().addLast(new LoginResponseHandler());
-                        ch.pipeline().addLast(new LogoutResponseHandler());
+                        ch.pipeline().addLast(LogoutResponseHandler.INSTANCE);
                         ch.pipeline().addLast(new MessageResponseHandler());
-                        ch.pipeline().addLast(new CreateGroupResponseHandler());
+                        ch.pipeline().addLast(CreateGroupResponseHandler.INSTANCE);
+                        ch.pipeline().addLast(ListMembersGroupResponseHandler.INSTANCE);
+                        ch.pipeline().addLast(new QuitGroupResponseHandler());
+                        ch.pipeline().addLast(GroupMessageResponseHandler.INSTANCE);
                         ch.pipeline().addLast(new PacketEncoder());
+
                     }
                 });
 

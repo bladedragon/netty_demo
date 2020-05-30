@@ -1,2 +1,3 @@
-# netty_demo
-a parctice demo of netty
+# 基于Netty的简易聊天室
+> 该repo目前只是一个netty学习的demo，使用命令行进行控制，主要体验一下netty通信的内核思想，未来有机会将功能完善一下
+

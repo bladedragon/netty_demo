@@ -8,6 +8,11 @@ import session.Session;
 import util.SessionUtil;
 
 public class LogoutResponseHandler extends SimpleChannelInboundHandler<LoginResponsePacket> {
+    public static final LogoutResponseHandler INSTANCE = new LogoutResponseHandler();
+
+    LogoutResponseHandler(){
+
+    }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, LoginResponsePacket loginResponsePacket) throws Exception {

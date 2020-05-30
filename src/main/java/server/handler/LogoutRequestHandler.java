@@ -1,12 +1,20 @@
-package server;
+package server.handler;
 
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import protocol.request.LogoutRequestPacket;
 import protocol.response.LogoutResponsePacket;
 import util.SessionUtil;
 
+@ChannelHandler.Sharable
 public class LogoutRequestHandler extends SimpleChannelInboundHandler<LogoutRequestPacket> {
+
+    public static  final LogoutRequestHandler INSTANCE  = new LogoutRequestHandler();
+
+    LogoutRequestHandler(){
+
+    }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, LogoutRequestPacket msg) {

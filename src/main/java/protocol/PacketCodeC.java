@@ -1,15 +1,10 @@
 package protocol;
 
+import client.handler.ListMembersGroupResponseHandler;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
-import protocol.request.CreateGroupRequestPacket;
-import protocol.request.LoginRequestPacket;
-import protocol.request.LogoutRequestPacket;
-import protocol.request.MessageRequestPacket;
-import protocol.response.CreateGroupResponsePacket;
-import protocol.response.LoginResponsePacket;
-import protocol.response.LogoutResponsePacket;
-import protocol.response.MessageResponsePacket;
+import protocol.request.*;
+import protocol.response.*;
 import protocol.serialize.JSONSerializer;
 import protocol.serialize.Serializer;
 
@@ -37,6 +32,12 @@ public class PacketCodeC {
         packetTypeMap.put(LOGOUT_RESPONSE, LogoutResponsePacket.class);
         packetTypeMap.put(CREATE_GROUP_REQUEST, CreateGroupRequestPacket.class);
         packetTypeMap.put(CREATE_GROUP_RESPONSE, CreateGroupResponsePacket.class);
+        packetTypeMap.put(QUIT_GROUP_REQUEST, QuitGroupRequestPacket.class);
+        packetTypeMap.put(QUIT_GROUP_RESPONSE, QuitGroupResponsePacket.class);
+        packetTypeMap.put(LIST_GROUP_MEMBERS_REQUEST ,ListGroupMembersRequestPacket.class);
+        packetTypeMap.put(LIST_GROUP_MEMBERS_RESPONSE, ListGroupMembersResponsePacket.class);
+        packetTypeMap.put(GROUP_MESSAGE_REQUEST,GroupMessageRequestPacket.class);
+        packetTypeMap.put(GROUP_MESSAGE_RESPONSE,GroupMessageResponsePacket.class);
         serializerMap = new HashMap<>();
         Serializer serializer = new JSONSerializer();
         serializerMap.put(serializer.getSerializerAlgorithm(), serializer);

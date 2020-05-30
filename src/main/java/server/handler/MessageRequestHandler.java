@@ -1,6 +1,7 @@
 package server.handler;
 
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import protocol.request.MessageRequestPacket;
@@ -10,8 +11,14 @@ import util.SessionUtil;
 
 import java.util.Date;
 
+@ChannelHandler.Sharable
 public class MessageRequestHandler extends SimpleChannelInboundHandler<MessageRequestPacket> {
 
+    public  static  final  MessageRequestHandler INSTANCE = new MessageRequestHandler();
+
+    MessageRequestHandler(){
+
+    }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, MessageRequestPacket messageRequestPacket) {

@@ -13,6 +13,7 @@ import java.util.UUID;
 
 public class LoginResponseHandler extends SimpleChannelInboundHandler<LoginResponsePacket> {
 
+
 //    @Override
 //    public void channelActive(ChannelHandlerContext ctx) {
 //        // 创建登录对象

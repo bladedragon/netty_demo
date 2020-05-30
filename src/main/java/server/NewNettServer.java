@@ -1,5 +1,7 @@
 package server;
 
+import client.handler.GroupMessageResponseHandler;
+import codec.PacketCodecHandler;
 import codec.PacketDecoder;
 import codec.PacketEncoder;
 import io.netty.bootstrap.ServerBootstrap;
@@ -9,9 +11,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import codec.Spliter;
-import server.handler.AuthHandler;
-import server.handler.LoginRequestHandler;
-import server.handler.MessageRequestHandler;
+import server.handler.*;
 
 import java.util.Date;
 
@@ -34,13 +34,17 @@ public class NewNettServer {
                         @Override
                         protected void initChannel(NioSocketChannel ch) {
                             ch.pipeline().addLast(new Spliter());
-                            ch.pipeline().addLast(new PacketDecoder());
-                            ch.pipeline().addLast(new LoginRequestHandler());
-                            ch.pipeline().addLast(new AuthHandler());
-                            ch.pipeline().addLast(new MessageRequestHandler());
-                            ch.pipeline().addLast(new CreateGroupRequestHandler());
-                            ch.pipeline().addLast(new LogoutRequestHandler());
+                            ch.pipeline().addLast(PacketCodecHandler.INSTANCE);
+                            ch.pipeline().addLast(LoginRequestHandler.INSTANCE);
+                            ch.pipeline().addLast(AuthHandler.INSTANCE);
+                            ch.pipeline().addLast(MessageRequestHandler.INSTANCE);
+                            ch.pipeline().addLast(CreateGroupRequestHandler.INSTANCE);
+                            ch.pipeline().addLast(LogoutRequestHandler.INSTANCE);
+                            ch.pipeline().addLast(QuitGroupRequestHandler.INSTANCE);
+                            ch.pipeline().addLast(ListGroupMembersRequestHandler.INSTANCE);
+                            ch.pipeline().addLast(GroupMessageRequestHandler.INSTANCE);
                             ch.pipeline().addLast(new PacketEncoder());
+
                         }
                     });
 

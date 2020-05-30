@@ -16,7 +16,6 @@ public class CreateGroupConsoleCommand implements ConsoleCommand {
 
         System.out.print("【拉人群聊】输入 userId 列表，userId 之间英文逗号隔开：");
         String userIds = scanner.next();
-        System.out.println("执行到这里");
         createGroupRequestPacket.setUserIdList(Arrays.asList(userIds.split(USER_ID_SPLITER)));
         channel.writeAndFlush(createGroupRequestPacket);
     }
